@@ -21,19 +21,25 @@ body {
 
 body {
   display: grid;
-  place-items: center;
-  padding: 18px;
-  background: #131820;
+  place-items: start center;
+  padding: 10px 0 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, #bde7ff 0%, #ffe2f0 100%);
   color: #f5f7fb;
   font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
 }
 
 .game-shell {
-  width: min(100%, 1040px);
+  width: min(100vw, 430px);
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  place-items: start center;
+  align-content: start;
 }
 
 .top-bar {
-  display: flex;
+  display: none;
   align-items: end;
   justify-content: space-between;
   gap: 18px;
@@ -73,18 +79,18 @@ p {
 }
 
 #gameCanvas {
-  width: 100%;
+  width: min(calc(100vw - 18px), 430px);
   aspect-ratio: 16 / 9;
   
   display: block;
-  border: 2px solid #2d3848;
-  border-radius: 8px;
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  border-radius: 14px;
   background: #77b9ff;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
+  box-shadow: 0 12px 28px rgba(129, 69, 98, 0.22);
 }
 
 .help-bar {
-  display: flex;
+  display: none;
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 12px;
@@ -93,50 +99,81 @@ p {
 }
 
 .touch-controls {
-  display: none;
-  grid-template-columns: 1fr 1.15fr 1fr auto;
+  position: fixed;
+  left: 50%;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: min(94vw, 430px);
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
   gap: 10px;
-  margin-top: 12px;
+  margin: 0;
+  padding: 10px 12px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 28px;
+  background: rgba(255, 244, 251, 0.88);
+  box-shadow: 0 12px 26px rgba(187, 87, 132, 0.2);
+  backdrop-filter: blur(6px);
+}
+
+.control-title {
+  position: fixed;
+  left: 50%;
+  bottom: calc(max(18px, env(safe-area-inset-bottom)) + 100px);
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #be185d;
+  font: 900 15px "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+  box-shadow: 0 8px 18px rgba(190, 24, 93, 0.18);
 }
 
 .touch-button {
-  min-height: 58px;
-  border: 1px solid #3c4a5f;
-  border-radius: 8px;
-  background: #243246;
-  color: #ffffff;
+  min-height: 64px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffd5e8 100%);
+  color: #8a1747;
   font: 800 20px "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 -5px 0 rgba(219, 39, 119, 0.18), 0 8px 16px rgba(190, 24, 93, 0.18);
 }
 
 .touch-button:active,
 .touch-button.is-down {
-  transform: translateY(1px);
-  background: #33547b;
+  transform: translateY(3px) scale(0.98);
+  background: linear-gradient(180deg, #ffe4f1 0%, #ff9eca 100%);
 }
 
 .touch-button.jump {
-  background: #2f6f58;
+  background: linear-gradient(180deg, #fff7c7 0%, #ffc86b 100%);
+  color: #7c2d12;
 }
 
 .touch-button.small {
-  min-width: 70px;
-  font-size: 16px;
-  background: #3a3147;
+  min-width: 0;
+  font-size: 17px;
+  background: linear-gradient(180deg, #e9ddff 0%, #c9a7ff 100%);
+  color: #4c1d95;
 }
 
 @media (max-width: 720px) {
   body {
-    padding: 0;
-    background: #77b9ff;
+    padding: 10px 0 0;
+    background: linear-gradient(180deg, #bde7ff 0%, #ffe2f0 100%);
+    overflow: hidden;
   }
 
   .game-shell {
     width: 100vw;
     height: 100dvh;
     display: grid;
-    place-items: center;
-    
+    grid-template-rows: auto auto;
+    place-items: start center;
+    align-content: start;
+    gap: 14px;
   }
 
   .top-bar {
@@ -152,12 +189,12 @@ p {
   }
 
   #gameCanvas {
-    width: min(100vw, calc(100dvh * 16 / 9));
-    height: min(100dvh, calc(100vw * 9 / 16));
+    width: min(calc(100vw - 18px), calc((100dvh - 188px) * 16 / 9));
+    height: auto;
     max-height: none;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
+    border: 3px solid rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    box-shadow: 0 12px 28px rgba(129, 69, 98, 0.22);
   }
 
   .help-bar {
@@ -165,7 +202,49 @@ p {
   }
 
   .touch-controls {
-    display: none;
+    width: min(94vw, 430px);
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1fr;
+    gap: 10px;
+    margin: 0 auto;
+    padding: 10px 12px 12px;
+    border: 2px solid rgba(255, 255, 255, 0.72);
+    border-radius: 28px;
+    background: rgba(255, 244, 251, 0.78);
+    box-shadow: 0 12px 26px rgba(187, 87, 132, 0.2);
+    backdrop-filter: blur(6px);
+  }
+
+  .control-title {
+    display: block;
+  }
+
+  .touch-button {
+    min-height: 64px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ffffff 0%, #ffd5e8 100%);
+    color: #8a1747;
+    font: 900 20px "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+    box-shadow: inset 0 -5px 0 rgba(219, 39, 119, 0.18), 0 8px 16px rgba(190, 24, 93, 0.18);
+  }
+
+  .touch-button:active,
+  .touch-button.is-down {
+    transform: translateY(3px) scale(0.98);
+    background: linear-gradient(180deg, #ffe4f1 0%, #ff9eca 100%);
+  }
+
+  .touch-button.jump {
+    background: linear-gradient(180deg, #fff7c7 0%, #ffc86b 100%);
+    color: #7c2d12;
+  }
+
+  .touch-button.small {
+    min-width: 0;
+    font-size: 17px;
+    background: linear-gradient(180deg, #e9ddff 0%, #c9a7ff 100%);
+    color: #4c1d95;
   }
 }
 
@@ -179,7 +258,11 @@ p {
   }
 
   .touch-controls {
-    display: none;
+    display: grid;
+    width: min(560px, 92vw);
+    grid-template-columns: 1fr 1.15fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
   }
 
   .touch-button {
@@ -211,11 +294,11 @@ p {
       <span>重开：R</span>
     </section>
 
+    <div class="control-title">操作按钮</div>
     <section class="touch-controls" aria-label="手机触屏按钮">
-      <button class="touch-button" data-key="arrowleft" type="button">左</button>
+      <button class="touch-button" data-key="arrowleft" type="button">←</button>
       <button class="touch-button jump" data-key=" " type="button">跳</button>
-      <button class="touch-button" data-key="arrowright" type="button">右</button>
-      <button class="touch-button small" data-key="r" type="button">重开</button>
+      <button class="touch-button" data-key="arrowright" type="button">→</button>
     </section>
   </main>
 
@@ -1481,6 +1564,10 @@ canvas.addEventListener("pointerdown", (event) => {
     advanceStartScreen();
     return;
   }
+  if (gameState === "lose" || gameState === "win") {
+    resetGame();
+    return;
+  }
   touchMove.active = true;
   touchMove.pointerId = event.pointerId;
   touchMove.startX = point.x;
@@ -1539,6 +1626,10 @@ canvas.addEventListener("touchstart", (event) => {
     advanceStartScreen();
     return;
   }
+  if (gameState === "lose" || gameState === "win") {
+    resetGame();
+    return;
+  }
   touchMove.active = true;
   touchMove.pointerId = touch.identifier;
   touchMove.startX = point.x;
@@ -1595,6 +1686,9 @@ document.querySelectorAll(".touch-button").forEach((button) => {
   button.addEventListener("pointerup", release);
   button.addEventListener("pointercancel", release);
   button.addEventListener("pointerleave", release);
+  button.addEventListener("touchstart", press, { passive: false });
+  button.addEventListener("touchend", release, { passive: false });
+  button.addEventListener("touchcancel", release, { passive: false });
 });
 
 showStartScreen();
