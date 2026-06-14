@@ -522,6 +522,7 @@ let hasBow = false;
 let backpackSunglasses = loadBackpackItem("sunglasses");
 let backpackBow = loadBackpackItem("bow");
 let previousGameState = "start";
+let previousStartPhase = "title";
 let bagShownAt = 0;
 let lastBagActionAt = 0;
 let startPhase = "title";
@@ -548,6 +549,7 @@ const failCatPlaybackRate = 0.66;
 const failCatOutroCutSeconds = 0.8;
 const failCatMaxWallTime = 3000;
 
+const startPlayButton = { x: W / 2 - 92, y: 286, w: 184, h: 56 };
 const startBagButton = { x: W / 2 + 116, y: 290, w: 128, h: 50 };
 const winBagButton = { x: W - 150, y: 432, w: 112, h: 42 };
 const bagBackButton = { x: 52, y: H - 72, w: 128, h: 46 };
@@ -1463,6 +1465,9 @@ function handleEndingAction() {
 
 function openBagPage(fromState = gameState) {
   previousGameState = fromState === "bag" ? "start" : fromState;
+  if (previousGameState === "start") {
+    previousStartPhase = startPhase;
+  }
   gameState = "bag";
   bagShownAt = performance.now();
   touchMove.active = false;
@@ -1481,8 +1486,8 @@ function closeBagPage() {
     return;
   }
   gameState = "start";
-  startPhase = "menu";
-  startShownAt = performance.now() - 900;
+  startPhase = previousStartPhase || "menu";
+  startShownAt = performance.now() - (startPhase === "menu" ? 900 : 0);
   statusText.textContent = "准备开始";
 }
 
@@ -1495,8 +1500,6 @@ function handleBagTap(point) {
   if (isInside(point, bagHomeButton)) {
     stopBackpackBgm();
     showStartScreen();
-    startPhase = "menu";
-    startShownAt = performance.now() - 900;
     return;
   }
   if (isInside(point, bagBackButton)) {
@@ -2587,10 +2590,14 @@ canvas.addEventListener("pointerdown", (event) => {
     return;
   }
   if (gameState === "start") {
-    if (startPhase === "menu" && isInside(point, startBagButton)) {
-      openBagPage("start");
-    } else {
+    if (startPhase === "title") {
       advanceStartScreen();
+    } else if (isInside(point, startBagButton)) {
+      openBagPage("start");
+    } else if (isInside(point, startPlayButton)) {
+      startGame();
+    } else {
+      return;
     }
     return;
   }
@@ -2665,10 +2672,14 @@ canvas.addEventListener("touchstart", (event) => {
     return;
   }
   if (gameState === "start") {
-    if (startPhase === "menu" && isInside(point, startBagButton)) {
-      openBagPage("start");
-    } else {
+    if (startPhase === "title") {
       advanceStartScreen();
+    } else if (isInside(point, startBagButton)) {
+      openBagPage("start");
+    } else if (isInside(point, startPlayButton)) {
+      startGame();
+    } else {
+      return;
     }
     return;
   }
